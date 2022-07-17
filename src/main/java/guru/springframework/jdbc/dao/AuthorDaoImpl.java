@@ -13,6 +13,8 @@ public class AuthorDaoImpl implements AuthorDao {
             "SELECT * FROM AUTHOR where id = ?";
     public static final String SELECT_AUTHOR_BY_NAME =
             "SELECT * FROM AUTHOR where first_name = ? AND last_name = ?";
+    public static final String INSERT_INTO_AUTHOR_FIRST_NAME_LAST_NAME =
+            "INSERT INTO AUTHOR (first_name, last_name) VALUES (?, ?)";
 
     private final JdbcTemplate jdbcTemplate;
 
@@ -22,17 +24,23 @@ public class AuthorDaoImpl implements AuthorDao {
 
     @Override
     public Author findAuthorById(Long id) {
-        return jdbcTemplate.queryForObject(SELECT_AUTHOR_BY_ID,AuthorMapper.authorRowMapper,id);
+        return jdbcTemplate.queryForObject(
+                SELECT_AUTHOR_BY_ID,AuthorMapper.authorRowMapper,id);
     }
 
     @Override
     public Author findAuthorByName(String firstName, String lastName) {
-        return jdbcTemplate.queryForObject(SELECT_AUTHOR_BY_NAME,AuthorMapper.authorRowMapper,firstName,lastName);
+        return jdbcTemplate.queryForObject(
+                SELECT_AUTHOR_BY_NAME,AuthorMapper.authorRowMapper,firstName,lastName);
     }
 
     @Override
     public Author saveNewAuthor(Author author) {
-        return null;
+        int updatedRowID = this.jdbcTemplate.update(
+                INSERT_INTO_AUTHOR_FIRST_NAME_LAST_NAME,
+                author.getFirstName(), author.getLastName());
+
+        return findAuthorById((long) updatedRowID);
     }
 
     @Override

@@ -70,13 +70,13 @@ public class DaoIntegrationTest {
     @Test
     void testGetAuthorByName() {
         Author author = authorDao.findAuthorByName("Craig", "Walls");
-
         assertThat(author).isNotNull();
+        System.out.printf("%n###### the found author name: %s ######%n%n",author.getLastName());
     }
 
     @Test
     void testGetAuthorById() {
-        Author author = authorDao.findAuthorById(1L);
+        Author author = authorDao.findAuthorById(2L);
         assertThat(author.getId()).isNotNull();
         System.out.printf("%n###### the found author name: %s ######%n%n",author.getLastName());
 

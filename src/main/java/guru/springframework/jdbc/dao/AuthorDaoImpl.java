@@ -27,7 +27,7 @@ public class AuthorDaoImpl implements AuthorDao {
 
     @Override
     public Author findAuthorByName(String firstName, String lastName) {
-        return null;
+        return jdbcTemplate.queryForObject(SELECT_AUTHOR_BY_NAME,AuthorMapper.authorRowMapper,firstName,lastName);
     }
 
     @Override

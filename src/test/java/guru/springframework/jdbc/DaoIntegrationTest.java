@@ -37,9 +37,19 @@ public class DaoIntegrationTest {
 
         authorDao.deleteAuthorById(saved.getId());
 
+        System.out.printf("%n###### the author to delete: %s %s ######%n%n"
+                ,author.getFirstName(),author.getLastName());
+
         Author deleted = authorDao.findAuthorById(saved.getId());
 
         assertThat(deleted).isNull();
+
+        if (deleted == null) {
+            System.out.println("###### Author deleted!!!! ######");
+        } else {
+            System.out.printf("%n###### author : %s %s not deleted!!######%n%n"
+                    ,author.getFirstName(),author.getLastName());
+        }
     }
 
     @Test
@@ -48,12 +58,18 @@ public class DaoIntegrationTest {
         author.setFirstName("john");
         author.setLastName("t");
 
+        System.out.printf("%n###### the author to update: %s %s ######%n%n"
+                ,author.getFirstName(),author.getLastName());
+
         Author saved = authorDao.saveNewAuthor(author);
 
         saved.setLastName("Thompson");
         Author updated = authorDao.updateAuthor(saved);
 
         assertThat(updated.getLastName()).isEqualTo("Thompson");
+
+        System.out.printf("%n###### the updated author name: %s %s ######%n%n"
+                ,author.getFirstName(),author.getLastName());
     }
 
     @Test

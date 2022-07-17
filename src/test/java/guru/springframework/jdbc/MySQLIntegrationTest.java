@@ -8,20 +8,24 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.ActiveProfiles;
 
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 
 @ActiveProfiles("local")
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
-public class MySQLIntegrationTest {
+class MySQLIntegrationTest {
 
     @Autowired
     BookRepository bookRepository;
 
     @Test
     void testMySQL() {
-        long countBefore = bookRepository.count();
-        assertThat(countBefore).isGreaterThan(0);
+
+        long numberOfBooks = bookRepository.count();
+        assertThat(numberOfBooks).isEqualTo(5);
+
+        System.out.printf("%n####### The number of books in the MySQL-DB: %d #######%n%n",numberOfBooks);
+
     }
 
 }

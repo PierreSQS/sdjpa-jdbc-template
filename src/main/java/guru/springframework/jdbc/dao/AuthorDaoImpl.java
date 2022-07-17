@@ -21,6 +21,9 @@ public class AuthorDaoImpl implements AuthorDao {
     public static final String UPDATE_AUTHOR_SET_FIRST_NAME_LAST_NAME_WHERE_ID =
             "UPDATE AUTHOR SET first_name = ? , last_name = ? WHERE id = ?";
 
+    public static final String SELECT_LAST_INSERT_ID =
+            "SELECT LAST_INSERT_ID()";
+
     private final JdbcTemplate jdbcTemplate;
 
     public AuthorDaoImpl(JdbcTemplate jdbcTemplate) {
@@ -41,29 +44,22 @@ public class AuthorDaoImpl implements AuthorDao {
 
     @Override
     public Author saveNewAuthor(Author author) {
-        int updatedRowID = this.jdbcTemplate.update(
+        this.jdbcTemplate.update(
                 INSERT_INTO_AUTHOR_FIRST_NAME_LAST_NAME,
                 author.getFirstName(), author.getLastName());
 
-        if (updatedRowID != 0) {
-            return author;
-        } else {
-            return null;
-        }
-
+        Long createdId = jdbcTemplate.queryForObject(SELECT_LAST_INSERT_ID, Long.class);
+        return findAuthorById(createdId);
     }
 
     @Override
     public Author updateAuthor(Author author) {
-        int updatedRowID = this.jdbcTemplate.update(
+        this.jdbcTemplate.update(
                 UPDATE_AUTHOR_SET_FIRST_NAME_LAST_NAME_WHERE_ID,
                 author.getFirstName(), author.getLastName(), author.getId());
 
-        if (updatedRowID != 0) {
-            return author;
-        } else {
-            return null;
-        }
+        Long createdId = jdbcTemplate.queryForObject(SELECT_LAST_INSERT_ID, Long.class);
+        return findAuthorById(createdId);
     }
 
     @Override

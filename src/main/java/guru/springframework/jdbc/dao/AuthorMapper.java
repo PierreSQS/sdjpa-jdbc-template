@@ -11,7 +11,7 @@ public class AuthorMapper {
     public static final RowMapper<Author> authorRowMapper = (rs, rowNum) -> {
         Author author = new Author();
         author.setId(rs.getLong("id"));
-        author.setLastName(rs.getString("first_name"));
+        author.setFirstName(rs.getString("first_name"));
         author.setLastName(rs.getString("last_name"));
         return author;
     };

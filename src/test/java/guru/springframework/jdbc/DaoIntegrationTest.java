@@ -1,18 +1,19 @@
 package guru.springframework.jdbc;
 
 import guru.springframework.jdbc.dao.AuthorDao;
-import guru.springframework.jdbc.dao.AuthorDaoImpl;
+import guru.springframework.jdbc.dao.BookDao;
 import guru.springframework.jdbc.domain.Author;
-import org.junit.jupiter.api.Assertions;
+import guru.springframework.jdbc.domain.Book;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.context.annotation.Import;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.test.context.ActiveProfiles;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 
 /**
@@ -22,11 +23,14 @@ import static org.assertj.core.api.Assertions.assertThat;
 @ActiveProfiles("local")
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
-@Import(AuthorDaoImpl.class)
+@ComponentScan("guru.springframework.jdbc.dao")
 class DaoIntegrationTest {
 
     @Autowired
     AuthorDao authorDao;
+
+    @Autowired
+    BookDao bookDao;
 
     @Test
     void testDeleteAuthor() {
@@ -42,7 +46,7 @@ class DaoIntegrationTest {
 
         authorDao.deleteAuthorById(saved.getId());
 
-        Assertions.assertThrows(EmptyResultDataAccessException.class,
+        assertThrows(EmptyResultDataAccessException.class,
                 () -> authorDao.findAuthorById(id));
 
     }
@@ -92,5 +96,18 @@ class DaoIntegrationTest {
         assertThat(author.getId()).isNotNull();
         System.out.printf("%n###### the found author name: %s ######%n%n", author.getLastName());
 
+    }
+
+    @Test
+    void testGetBookByTitle() {
+        Book foundBook = bookDao.findBookByTitle("Spring in Action, 6th Edition");
+        assertThat(foundBook).isNotNull();
+        System.out.printf("%n###### the found Book name: %s ######%n%n", foundBook.getTitle());
+    }
+
+    @Test
+    void testGetBookByTitleBookNotFound() {
+        assertThrows(EmptyResultDataAccessException.class,
+                () -> bookDao.findBookByTitle("Spring in Action, 6t Edition"));
     }
 }

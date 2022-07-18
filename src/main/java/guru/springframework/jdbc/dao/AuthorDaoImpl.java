@@ -23,6 +23,7 @@ public class AuthorDaoImpl implements AuthorDao {
 
     public static final String SELECT_LAST_INSERT_ID =
             "SELECT LAST_INSERT_ID()";
+    public static final String DELETE_FROM_AUTHOR_WHERE_ID = "DELETE FROM AUTHOR where id = ?";
 
     private final JdbcTemplate jdbcTemplate;
 
@@ -64,6 +65,6 @@ public class AuthorDaoImpl implements AuthorDao {
 
     @Override
     public void deleteAuthorById(Long id) {
-
+        this.jdbcTemplate.update(DELETE_FROM_AUTHOR_WHERE_ID,id);
     }
 }
